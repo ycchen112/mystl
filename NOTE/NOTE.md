@@ -1,7 +1,7 @@
 # NOTE
 ## STL源码解析p.57 template\<int inst\>
 在class中有static成员，可以使用不同的inst值来获得不同的static成员
-~~~
+~~~C++
 template<int inst>
 class _A
 {
@@ -40,7 +40,7 @@ A_1: 1
 
 ## STL源码解析p.57 static void (* set_malloc_handler(void (* f)())) ()
 https://www.cnblogs.com/Chierush/p/3745520.html
-~~~
+~~~C++
 static void (* set_malloc_handler(void (* f)())) ()
 {
     void (* old)() = __malloc_alloc_oom_handler;
