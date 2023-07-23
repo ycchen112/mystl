@@ -48,5 +48,5 @@ static void (* set_malloc_handler(void (* f)())) ()
     return(old);
 }
 ~~~
-set_malloc_handler是一个函数指针,参数为void (\*f)() —— 一个void (\*)()类型的函数指针f
+set_malloc_handler是一个函数指针,参数为void (\*f)() —— 一个void (\*)()类型的函数指针f<br>
 set_malloc_handler前面一个*号说明该函数返回一个函数指针，该函数参数列表为空，返回值为void
