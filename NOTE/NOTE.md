@@ -89,3 +89,8 @@ set_malloc_handler前面一个*号说明该函数返回一个函数指针，该�
 ~(__ALIGN-1): 111..11000, 和别的数与相当于去掉被8除的余数=[(bytes+7)/8]*8<br>
 https://www.zhihu.com/question/41043015<br>
 
+#### 4. p.67 size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4);
+<div align=center>
+    <img src="./+ROUNDUP().png">
+</div>
+说是让内存更灵活，避免频繁和系统申请内存<br>
