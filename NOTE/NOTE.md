@@ -15,7 +15,7 @@
     维护16个free_list, 管理8, 16, 24 ... 128bytes的小内存块<br>
     <!-- <center><p>![free_list](./free_list.png)</p></center> -->
     <div align=center>
-    <img src="./free_list.png">
+    <img src="./src/free_list.png">
     </div>
     分配内存时，从free_list的头部取出内存块，取出内存后其**下一个节点变为头节点**。<br>
     回收内存时，将区块放入free_list头部。<br>
@@ -23,7 +23,7 @@
 2. 内存池(memory pool)<br>
    chunk_alloc()将内存从内存池中取出给free_list使用。<br>
    <div align=center>
-    <img src="./chunk_alloc.png">
+    <img src="./src/chunk_alloc.png">
     </div>
 
 <d1>
@@ -91,6 +91,6 @@ https://www.zhihu.com/question/41043015<br>
 
 #### 4. p.67 size_t bytes_to_get = 2 * total_bytes + ROUND_UP(heap_size >> 4);
 <div align=center>
-    <img src="./+ROUNDUP().png">
+    <img src="./src/+ROUNDUP().png">
 </div>
 说是让内存更灵活，避免频繁和系统申请内存<br>
