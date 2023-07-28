@@ -72,6 +72,54 @@
 </d1>
 
 ## 迭代器(iterator)  
+### Traits
+用于获取迭代器所指对象的类型。  
+1. 声明内嵌类型
+   ~~~C++
+    template <class T>
+    struct MyIter {
+        typedef T value_type;   //声明内嵌类型，便于下面函数获取返回值value_type
+        T* ptr;
+        MyIter(T* p=0) : ptr(p) { }
+	    T& operator*() const { return *ptr; }
+        // ...
+    };
+    template <class I>
+    typename I::value_type      //func的返回类型，即T
+    func(I iter) { return *iter; }
+
+    // ...
+    MyIter<int> ite(new int (8));
+    cout << func(ite);	//输出8
+   ~~~
+   因为编译器在具体实现之前不知道`I::value_type`是成员函数还是成员变量（这里I是`MyIter<T>`）。  
+   关键字`typename`在于告诉编译器`I::value_type`是类型。 
+   但是，**并不是所有迭代器都是`class type`比如原生指针，所以需要偏特化。** 
+2. 偏特化iterator_traits来萃取value_type
+   上例加入iterator_traits:      
+   ~~~C++
+    template <class I>
+    struct iterator_traits {
+        typedef typename I::value_type value_type;
+    };      //如果I定义有自己的value_type则萃取出来的就是I::value_type
+
+    /*
+        返回值相比于上面例子多了iterator_trais<I>这一层间接关系
+        好处在于可以使traits拥有特化版本
+    */
+    template <class I>
+    typename iterator_traits<I>::value_type     //func的返回类型
+    func(I iter) { return *iter; }
+   ~~~
+   为迭代器的template参数为指针的设计偏特化版迭代器。  
+   可以萃取出`int*`之类的不是class type的value_type  
+   ~~~C++
+    template <class T>
+    struct iterator_traits<T*> {
+        typedef T value_type;
+    }
+   ~~~
+   
 
 
 
