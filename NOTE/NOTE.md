@@ -111,15 +111,42 @@
     typename iterator_traits<I>::value_type     //func的返回类型
     func(I iter) { return *iter; }
    ~~~
-   为迭代器的template参数为指针的设计偏特化版迭代器。  
-   可以萃取出`int*`之类的不是class type的value_type  
+   iterator_traits偏特化来萃取不同类型迭代器。  
    ~~~C++
     template <class T>
     struct iterator_traits<T*> {
         typedef T value_type;
-    }
+    };      //偏特化——迭代器是原生指针
+
+    template <class T>
+    struct iterator_traits<const T*> {
+        typedef T value_type;
+    };      //偏特化——迭代器是指向常量的指针
    ~~~
-   
+   使iterator_traits生效要求每一个迭代器遵守约定，按要求内嵌类型定义。  
+3. 迭代器型别
+   ~~~C++
+    template <class I>
+    struct iterator_traits {
+        typedef typename I::iterator_categoty   iterator_categoty;
+        typedef typename I::value_type          value_type;
+        typedef typename I::differenc_type      difference_type;
+        typedef typename I::pointer             pointer;
+        typedef typename I::reference           reference;
+    };
+   ~~~
+4. 迭代器的分类  
+   ~~~
+    Input Iterator:         只读
+    Output Iterator:        只写
+    Forward Iterator:       区间上单项移动，每次移动一步，读写
+    Bidirectional Iterator: 区间上双向移动，每次移动一步，读写
+    Random Access Iterator: 涵盖指针的全部操作
+   ~~~
+
+## vector
+1. 
+
 
 
 
