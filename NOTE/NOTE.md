@@ -213,3 +213,13 @@ https://www.zhihu.com/question/41043015
     <img src="./src/+ROUNDUP().png">
 </div>
 说是让内存更灵活，避免频繁和系统申请内存  
+
+### 4. new operator和operator new
+- new operator/delete operator
+  即new/delete操作符，不可被重载  
+  new operator: 调用operator new分配空间，然后调用构造函数；  
+  delete operator: 调用析构函数，然后调用operator delete释放空间；
+- operator new/operator delete
+  只分配/释放空间，不调用构造/析构函数。  
+- Placement new
+  placement new 是重载operator new的一个标准、全局的版本。它并不分配内存，只是返回指向已经分配好的某段内存的一个指针。因此不能删除它，但需要调用对象的析构函数。    

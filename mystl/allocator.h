@@ -15,9 +15,9 @@ namespace mystl
 
     private:
         static void* allocate();
+        static void deallocate();
         static void* allocate(size_type n, pointer p);
-
         
-
-    }
+        
+    };
 }
