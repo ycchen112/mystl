@@ -145,7 +145,20 @@
    ~~~
 
 ## vector
-1. 
+1. 数据结构
+   连续的线性空间，使用三个迭代器：  
+   ~~~C++
+    iterator first;             // 当前空间的头
+    iterator last;              // 当前空间的尾
+    iterator end_of_storage;    // 当前可用空间的尾
+   ~~~
+   vector实际配置的空间可能比客户端需求量大方便之后的扩充。  
+2. vector构造与内存管理
+   调用uninitialize.h中的全局函数，根据type_traits决定使用fill()还是constructor()  
+   push_back()时首先检测是否还有备用空间，有则直接在备用空间构造，无则扩充空间（动态增加大小）。  
+   动态增加大小：重开原大小两倍的空间——>将原内容拷贝过来——>在原内容后构造新元素（新空间上）——>释放原空间  
+
+## list
 
 
 
