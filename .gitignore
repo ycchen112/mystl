@@ -1,2 +1,5 @@
 *.xmind
 *.pptx
+*.exe
+
+test.cpp

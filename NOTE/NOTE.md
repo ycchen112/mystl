@@ -144,6 +144,14 @@
     Random Access Iterator: 涵盖指针的全部操作
    ~~~
 
+## 全局函数
+1. uninitialized_fill_n(ForwardIterator first, Size n, const T& x)
+   first: 指向要初始化空间的起始处;  
+   n: 要初始化空间的大小;  
+   x: 初始化的值;  
+   如果在[first, first + n)范围内的每一个迭代器都指向未初始化的内存则调用copy_constructor在该范围内产生x的副本。  
+   若在此过程中有任意一个copy_constructor抛出异常则析构所有已产生你给的元素(commit or rollback)。  
+2. 
 ## vector
 1. 数据结构
    连续的线性空间，使用三个迭代器：  
