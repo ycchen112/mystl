@@ -244,3 +244,30 @@ https://www.zhihu.com/question/41043015
   只分配/释放空间，不调用构造/析构函数。  
 - Placement new
   placement new 是重载operator new的一个标准、全局的版本。它并不分配内存，只是返回指向已经分配好的某段内存的一个指针。因此不能删除它，但需要调用对象的析构函数。    
+
+### copy和copy_backward
+~~~C++
+/**
+   *  @brief Copies the range [first,last) into result.
+   *  @ingroup mutating_algorithms
+   *  @param  __first  An input iterator.
+   *  @param  __last   An input iterator.
+   *  @param  __result An output iterator.
+   *  @return   result + (first - last)
+*/
+template<typename _II, typename _OI>
+inline _OI copy(_II __first, _II __last, _OI __result)
+
+/**
+   *  @brief Copies the range [first,last) into result.
+   *  @param  __first  A bidirectional iterator.
+   *  @param  __last   A bidirectional iterator.
+   *  @param  __result A bidirectional iterator.
+   *  @return   result - (first - last)
+   *
+   *  The function has the same effect as copy, but starts at the end of the
+   *  range and works its way to the start, returning the start of the result.
+*/
+template<typename _BI1, typename _BI2>
+inline _BI2 copy_backward(_BI1 __first, _BI1 __last, _BI2 __result)
+~~~
