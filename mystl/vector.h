@@ -28,8 +28,8 @@ protected:
 
 	// 释放(vector自己的成员函数，其中调用data_allocate中的deallocate)
 	void deallocate() {
-		if (star) {
-			data_allocator::deallocate(start, end_of_storage - start);
+		if (start) {
+			data_allocator::deallocate((size_type)(end_of_storage - start), start);
 		}
 	}
 
@@ -54,25 +54,24 @@ public:
 	}
 
 	// 迭代器相关
-	iterator begin() { return begin(); }
-	iterator end() { return end(); }
+	iterator begin() const { return start; }
+	iterator end() const { return finish; }
 
 	// 容量和大小
 	size_type size() const { return (size_type)(end() - begin()); }
 	size_type capacity() const { return (size_type)(this->end_of_storage - begin()); }
 
-	bool empty() const { return end() == begin(); }
+	bool	  empty() const { return end() == begin(); }
 	reference font() { return begin(); }
 	reference back() { return *(end() - 1); }
 
 	// 插入删除
 	void push_back(const T& value) {
-		if(finish != end_of_storage) {
+		if (finish != end_of_storage) {
 			construct(finish, value);
 			finish++;
-		}
-		else {
-			insert_aux(finish, value)
+		} else {
+			insert_aux(finish, value);
 		}
 	}
 	void pop_back() {
@@ -81,7 +80,7 @@ public:
 
 	// 具体位置删除，返回删除后该位置的迭代器
 	iterator erase(iterator position) {
-		if(position + 1 != end()) {
+		if (position + 1 != end()) {
 			copy(position + 1, finish, position);
 		}
 		finish--;
@@ -91,7 +90,7 @@ public:
 	// [first, last)范围删除，返回first的迭代器
 	// TODO 超出范围异常
 	iterator erase(iterator first, iterator last) {
-		if(first != last) {
+		if (first != last) {
 			iterator i = copy(last, finish, first);
 			destory(i, finish);
 			finish = finish - last + first;
@@ -103,10 +102,9 @@ public:
 	// 当前大小>n则多余参数被删除
 	// 当前大小<n则扩容，若传入value则放入扩容后的最后一个，若没有则添加默认构造
 	void resize(size_type n, const T& value) {
-		if(n < size()) {
+		if (n < size()) {
 			erase(begin() + n, end());
-		}
-		else{
+		} else {
 			insert(end(), n - size(), value);
 		}
 	}
@@ -115,6 +113,9 @@ public:
 	}
 
 	void clear() { erase(begin(), end()); }
+
+	// 操作符重载
+	reference operator[](size_type n) { return *(begin() + n); }
 };
 
 template <class T, class Alloc>

@@ -11,7 +11,7 @@ public:
 	typedef const T& const_reference;
 	typedef size_t	 size_type;
 
-private:
+public:
 	static T* allocate();
 	static T* allocate(size_type n);
 	// static T* allocate(size_type n, pointer p);

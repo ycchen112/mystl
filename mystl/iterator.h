@@ -44,7 +44,7 @@ struct iterator_traits<const T*> {
 	typedef T*						   pointer;
 	typedef T&						   reference;
 	typedef ptrdiff_t				   difference_type;
-	typedef random_access_iterator_tag iterator_category
+	typedef random_access_iterator_tag iterator_category;
 };
 
 // 识别判别器类型
