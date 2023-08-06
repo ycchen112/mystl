@@ -271,3 +271,46 @@ inline _OI copy(_II __first, _II __last, _OI __result)
 template<typename _BI1, typename _BI2>
 inline _BI2 copy_backward(_BI1 __first, _BI1 __last, _BI2 __result)
 ~~~
+测试如下：  
+~~~C++
+#include <iostream>
+#include <algorithm>
+#include "algorithm.h"
+
+int main() {
+	int n_p[10];
+	for (int i = 0; i < 10; i++) {
+		n_p[i] = i;
+	}
+	std::cout << "my copy: " << '\n';
+	int* p_copy = mystl::copy(n_p + 1, n_p + 4, n_p + 5);
+	for (int i = 0; i < 10; i++) {
+		std::cout << n_p[i] << ", ";
+		n_p[i] = i;
+	}
+	std::cout << '\n' << "std copy: " << '\n';
+	p_copy = std::copy(n_p + 1, n_p + 4, n_p + 5);
+	for (int i = 0; i < 10; i++) {
+		std::cout << n_p[i] << ", ";
+		n_p[i] = i;
+	}
+	std::cout << '\n' << '\n';
+
+	// copy_backward
+	std::cout << "my copy_backward: " << '\n';
+	int* p_copy_backward = mystl::copy_backward(n_p + 1, n_p + 5, n_p + 7);
+	for (int i = 0; i < 10; i++) {
+		std::cout << n_p[i] << ", ";
+		n_p[i] = i;
+	}
+	std::cout << '\n' << "std copy_backward: " << '\n';
+	p_copy_backward = std::copy_backward(n_p + 1, n_p + 5, n_p + 7);
+	for (int i = 0; i < 10; i++) {
+		std::cout << n_p[i] << ", ";
+		n_p[i] = i;
+	}
+	std::cout << '\n';
+    
+	return 0;
+}
+~~~

@@ -41,7 +41,7 @@ void __destory_aux(ForwardIterator, ForwardIterator, __true_type) {}
 template <class ForwardIterator>
 void __destory_aux(ForwardIterator first, ForwardIterator last, __false_type) {
 	for (; first < last; first++) {
-		destory(&*first); //? 加&
+		destory(&*first);
 	}
 }
 
