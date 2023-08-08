@@ -23,7 +23,7 @@ __uninitialized_copy_aux(InputIterator first, InputIterator last, ForwardIterato
 		for (; first != last; first++, cur++) {
 			construct(&*cur, *first);
 		}
-		return result;
+		return cur;
 	} catch (...) {
 		destory(result, cur);
 	}

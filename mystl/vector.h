@@ -10,10 +10,12 @@ public:
 	// 内嵌定义
 	typedef T		  value_type;
 	typedef T*		  pointer;
-	typedef T*		  iterator;
+	typedef T*		  iterator;		//指针可以直接作为迭代器
 	typedef T&		  reference;
 	typedef size_t	  size_type;
 	typedef ptrdiff_t difference_type;
+	typedef const T&  const_reference;
+	typedef const T*  const_pointer;
 
 protected:
 	// 空间配置器
@@ -38,8 +40,6 @@ protected:
 	iterator allocate_and_fill(size_type, const T& value);
 
 public:
-	// 对外接口
-
 	// 构造函数
 	vector() :
 			start(0), finish(0), end_of_storage(0) {}
@@ -147,7 +147,7 @@ void vector<T, Alloc>::insert_aux(iterator position, const T& value) {
 		}
 		// 释放原来的vector
 		destory(begin(), end()); // destory只是调用析构函数，不释放内存，所以要使用deallocate
-		deallocate(begin());
+		data_allocator::deallocate(begin());
 
 		start = new_start;
 		finish = new_finish;

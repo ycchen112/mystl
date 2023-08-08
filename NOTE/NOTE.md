@@ -167,8 +167,19 @@
    动态增加大小：重开原大小两倍的空间——>将原内容拷贝过来——>在原内容后构造新元素（新空间上）——>释放原空间  
 
 ## list
-
-
+STL list节点（双向链表）：  
+    <div align=center>
+    <img src="./src/list_node.png">
+    </div>
+1. list迭代器  
+   因为list是双向链表，所以其迭代器为Bidirectional Iterator  
+2. list数据结构
+   SGI STL的list是一个环形双向链表，所以使用一个迭代器就可以表示整个链表。  
+   如果让指针node指向刻意置于尾端的一个空白节点，node便能符合STL对于“前闭后开”区间的要求，称为last迭代器，如图：  
+   <div align=center>
+   <img src="./src/list_.png">
+   </div>
+3. 
 
 
 ## 记录
