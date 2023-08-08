@@ -179,7 +179,8 @@ STL list节点（双向链表）：
    <div align=center>
    <img src="./src/list_.png">
    </div>
-3. 
+3. list不能使用STL的sort(), 必须使用自己的成员函数sort(), 因为STL算法sort()只接受RandomAccessIterator。
+4. 
 
 
 ## 记录
@@ -256,7 +257,7 @@ https://www.zhihu.com/question/41043015
 - Placement new
   placement new 是重载operator new的一个标准、全局的版本。它并不分配内存，只是返回指向已经分配好的某段内存的一个指针。因此不能删除它，但需要调用对象的析构函数。    
 
-### copy和copy_backward
+### 5. copy和copy_backward
 ~~~C++
 /**
    *  @brief Copies the range [first,last) into result.
@@ -324,4 +325,28 @@ int main() {
     
 	return 0;
 }
+~~~
+
+### 6. 配置器中的allocate()和全局函数construct()  
+- allocate()函数负责分配一块足够容纳n个T对象的内存空间，**但不进行初始化**，相当于malloc函数，返回一个T类型的指针。  
+- construct负责在allocate分配的内存空间上调用其构造函数构造一个或多个对象，使用palcement new。  
+
+### 7. alloc, simple_alloc
+使alloc不接受任何template类型参数  
+~~~C++
+#ifdef __USE_MALLOC
+...
+typedef __malloc_alloc_template<0> malloc_alloc;
+typedef malloc_alloc alloc;
+#else
+...
+typedef __default_alloc_template<__NODE_ALLOCATOR_THREADS, 0> alloc;
+#endif
+~~~
+对alloc进行简单封装，使其接口能符合STL规范，simple_alloc中都是单纯的转调用  
+~~~C++
+template <class T, class Alloc>
+class simple_alloc {
+    ...
+};
 ~~~
