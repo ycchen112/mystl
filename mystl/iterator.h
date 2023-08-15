@@ -2,8 +2,8 @@
 
 #include <cstddef>
 
-namespace {
-template <class T, class Category, class Distance, class Pointer = T*, class Reference = T&>
+namespace mystl {
+template <class T, class Category, class Distance = ptrdiff_t, class Pointer = T*, class Reference = T&>
 struct iterator {
 	typedef T		  value_type;
 	typedef Pointer	  pointer;
