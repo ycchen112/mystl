@@ -77,15 +77,22 @@ protected:
 	// 配置一个节点空间(只申请内存)
 	link_type get_node() { return list_node_allocator::allocate(); }
 	// 释放一个节点
-	void put_node(iterator p) { list_node_allocator::deallocate(p); }
+	void put_node(link_type p) { list_node_allocator::deallocate(p); }
 	// 产生一个节点(形成节点), 带有元素值
 	link_type create_node(const T& value) {
 		link_type p = get_node();
-		construct(&p->data, value);
+		try {
+			construct(&p->data, value);
+		} catch(...) {
+			put_node(p);
+		}
 		return p;
 	}
-	// 在poistion处插入一个节点
-	iterator insert(iterator poistion, const T& value);
+
+	void destory_node(link_type p) {
+		destory(&p->data);
+		put_node(p);
+	}
 
 	// 空链表初始化，自己指向自己
 	void empty_initialize() {
@@ -95,15 +102,7 @@ protected:
 	}
 
 	// 多个元素初始化
-	void fill_initialize(size_type n, const T& value) {
-		empty_initialize();
-		try {
-			for (; n > 0; n--) {
-				iterator _node_temp = create_node(value);
-			}
-		} catch (...) {
-		}
-	}
+	void fill_initialize(size_type n, const T& value);
 
 public:
 	// 构造
@@ -114,16 +113,39 @@ public:
 	}
 
 	// 迭代器相关
-	iterator  begin() { return (*node_iterator).next; }
-	iterator  end() { return node_iterator; }
-	bool	  empty() const { return node_iterator.next == node_iterator; }
+	iterator  begin() { return (*node_ptr).next; }
+	iterator  end() { return node_ptr; }
+	bool	  empty() const { return node_ptr.next == node_ptr; }
 	reference font() { return *begin(); }
 	reference back() { return *(--end()); }
+
+	// 在poistion处插入一个节点
+	iterator insert(iterator poistion, const T& value);
+	// 插入一个节点，无初值
+	iterator insert(iterator poistion) { return insert(poistion, T()); }
+	// 插入n个节点
+	iterator insert(iterator poistion, size_type n, const T& value);
+	// 插入一段
+	template<class InputIterator>
+	iterator isnert(iterator poision, InputIterator first, InputIterator last);
+
 };
 
 template <class T>
+void list<T>::fill_initialize(size_type n, const T& value) {
+	empty_initialize();
+	try {
+		insert(begin(), n, value);
+	}
+}
+
+template <class T>
 typename list<T>::iterator list<T>::insert(iterator poistion, const T& value) {
-	iterator _node_temp = create_node(value);
-	
+	link_type _node_temp = create_node(value);
+	_node_temp->next = poistion.node;
+	_node_temp->prev = poistion.node->prev;
+	(poistion.node->prev)->next = _node_temp;
+	poistion.node->prev = _node_temp;
+	return _node_temp;
 }
 } //namespace mystl
