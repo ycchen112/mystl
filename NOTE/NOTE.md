@@ -350,3 +350,13 @@ class simple_alloc {
     ...
 };
 ~~~
+### __STL_TRY __STL_UNWIND
+~~~c++
+#ifdef __STL_USE_EXCEPTIONS
+#define __STL_TRY   try
+#define __STL_UNWIND(action)   catch(...) { action; throw; }
+#else
+#define __STL_TRY
+#define __STL_UNWIND(action)
+#endif
+~~~

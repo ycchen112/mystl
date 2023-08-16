@@ -119,16 +119,18 @@ public:
 	reference font() { return *begin(); }
 	reference back() { return *(--end()); }
 
-	// 在poistion处插入一个节点
-	iterator insert(iterator poistion, const T& value);
+	// 在position处插入一个节点
+	iterator insert(iterator position, const T& value);
 	// 插入一个节点，无初值
-	iterator insert(iterator poistion) { return insert(poistion, T()); }
+	iterator insert(iterator position) { return insert(position, T()); }
 	// 插入n个节点
-	iterator insert(iterator poistion, size_type n, const T& value);
+	iterator insert(iterator position, size_type n, const T& value);
 	// 插入一段
 	template<class InputIterator>
-	iterator isnert(iterator poision, InputIterator first, InputIterator last);
+	iterator insert(iterator position, InputIterator first, InputIterator last);
 
+	// 清除所有节点(保留了自己指向自己的节点)
+	void clear();
 };
 
 template <class T>
@@ -136,16 +138,48 @@ void list<T>::fill_initialize(size_type n, const T& value) {
 	empty_initialize();
 	try {
 		insert(begin(), n, value);
+	} catch(...) {
+		clear();
+		put_node(node_ptr);
 	}
 }
 
 template <class T>
-typename list<T>::iterator list<T>::insert(iterator poistion, const T& value) {
+typename list<T>::iterator list<T>::insert(iterator position, const T& value) {
 	link_type _node_temp = create_node(value);
-	_node_temp->next = poistion.node;
-	_node_temp->prev = poistion.node->prev;
-	(poistion.node->prev)->next = _node_temp;
-	poistion.node->prev = _node_temp;
+	_node_temp->next = position.node;
+	_node_temp->prev = position.node->prev;
+	(position.node->prev)->next = _node_temp;
+	position.node->prev = _node_temp;
 	return _node_temp;
+}
+
+template <class T>
+typename list<T>::iterator list<T>::insert(iterator position, size_type n, const T& value) {
+	for( ; n > 0; n--) {
+		insert(position, value);
+	}
+	return position;
+}
+
+template<class T> 
+template <class InputIterator>
+typename list<T>::iterator list<T>::insert(iterator position, InputIterator first, InputIterator last) {
+	for( ; first != last; first++) {
+		insert(position, *first);
+	}
+	return position;
+}
+
+template <class T>
+void list<T>::clear() {
+	link_type cur = node_ptr->next;
+	while(cur != node_ptr) {
+		link_type temp = cur;
+		cur = cur->next;
+		destory_node(temp);
+	}
+	node_ptr->next = node_ptr;
+	node_ptr->prev = node_ptr;
 }
 } //namespace mystl
