@@ -180,7 +180,10 @@ STL list节点（双向链表）：
    <img src="./src/list_.png">
    </div>
 3. list不能使用STL的sort(), 必须使用自己的成员函数sort(), 因为STL算法sort()只接受RandomAccessIterator。
-4. 
+4. list_transfer  
+   <div align=center>
+   <img src="./src/list_transfer.jpg">
+   </div>
 
 
 ## 记录

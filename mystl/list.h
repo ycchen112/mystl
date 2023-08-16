@@ -83,7 +83,7 @@ protected:
 		link_type p = get_node();
 		try {
 			construct(&p->data, value);
-		} catch(...) {
+		} catch (...) {
 			put_node(p);
 		}
 		return p;
@@ -103,6 +103,19 @@ protected:
 
 	// 多个元素初始化
 	void fill_initialize(size_type n, const T& value);
+
+	// 将某连续范围内的元素迁移到某个位置, 将[first, last)迁移到position之前
+	void transfer(iterator position, iterator first, iterator last) {
+		if (position != last) {
+			(*(link_type((*last.node).prev))).next = position.node;
+			(*(link_type((*first.node).prev))).next = last.node;
+			(*(link_type((*position.node).prev))).next = first.node;
+			link_type temp = link_type((*position.node).prev);
+			(*position.node).prev = (*last.node).prev;
+			(*last.node).prev = (*first.node).prev;
+			(*first.node).prev = temp;
+		}
+	}
 
 public:
 	// 构造
@@ -126,11 +139,34 @@ public:
 	// 插入n个节点
 	iterator insert(iterator position, size_type n, const T& value);
 	// 插入一段
-	template<class InputIterator>
+	template <class InputIterator>
 	iterator insert(iterator position, InputIterator first, InputIterator last);
 
 	// 清除所有节点(保留了自己指向自己的节点)
 	void clear();
+
+	// 头插入、尾插入
+	void push_font(const T& value) { insert(begin(), value); }
+	void push_back(const T& value) { insert(end(), value); }
+
+	// 消除一个位置元素
+	iterator erase(iterator position);
+	// 消除一段位置元素[first, last)
+	iterator erase(iterator first, iterator last);
+
+	// 头消除、尾消除
+	void pop_font() { erase(begin()); }
+	void pop_back() { erase(--end()); }
+
+	// 将数值为value的节点删除
+	void remove(const T& value);
+	// 移除数值相同连续元素，连续而相同的元素将被移除一个
+	void unique();
+
+	// splice--对transfer的封装, 把x接到position前面，x必须不同于*this
+	void splice(iterator position, list& x);
+	// aplice--把i所指元素接到position前，position和i可以指向同一个list (对transfer的封装)
+	void aplice(iterator position, list&, iterator i);
 };
 
 template <class T>
@@ -138,7 +174,7 @@ void list<T>::fill_initialize(size_type n, const T& value) {
 	empty_initialize();
 	try {
 		insert(begin(), n, value);
-	} catch(...) {
+	} catch (...) {
 		clear();
 		put_node(node_ptr);
 	}
@@ -156,16 +192,16 @@ typename list<T>::iterator list<T>::insert(iterator position, const T& value) {
 
 template <class T>
 typename list<T>::iterator list<T>::insert(iterator position, size_type n, const T& value) {
-	for( ; n > 0; n--) {
+	for (; n > 0; n--) {
 		insert(position, value);
 	}
 	return position;
 }
 
-template<class T> 
+template <class T>
 template <class InputIterator>
 typename list<T>::iterator list<T>::insert(iterator position, InputIterator first, InputIterator last) {
-	for( ; first != last; first++) {
+	for (; first != last; first++) {
 		insert(position, *first);
 	}
 	return position;
@@ -174,12 +210,76 @@ typename list<T>::iterator list<T>::insert(iterator position, InputIterator firs
 template <class T>
 void list<T>::clear() {
 	link_type cur = node_ptr->next;
-	while(cur != node_ptr) {
+	while (cur != node_ptr) {
 		link_type temp = cur;
 		cur = cur->next;
 		destory_node(temp);
 	}
 	node_ptr->next = node_ptr;
 	node_ptr->prev = node_ptr;
+}
+
+template <class T>
+typename list<T>::iterator list<T>::erase(iterator position) {
+	link_type next_node = position.node->next;
+	link_type prev_node = position.node->prev;
+	prev_node->next = next_node;
+	next_node->prev = prev_node;
+	destory_node(position);
+	return iterator(next_node);
+}
+
+template <class T>
+typename list<T>::iterator list<T>::erase(iterator first, iterator last) {
+	for (; first != last; first++) {
+		erase(first);
+	}
+	return last;
+}
+
+template <class T>
+void list<T>::remove(const T& value) {
+	iterator first = begin();
+	iterator last = end();
+	while (first != last) {
+		iterator next = first;
+		next++;
+		if (*first == value) {
+			erase(first);
+		}
+		first = next;
+	}
+}
+
+template <class T>
+void list<T>::unique() {
+	if (empty())
+		return;
+	iterator first = begin();
+	iterator last = end();
+	iterator next = first;
+	while (++next != last) { //++使得next是first的下一个节点
+		if (*first == *next) {
+			erase(next);
+		} else {
+			first = next;
+		}
+		next = first;
+	}
+}
+
+template <class T>
+void list<T>::splice(iterator position, list& x) {
+	if (!x.empty()) {
+		transfer(position, x.begin(), x.end());
+	}
+}
+
+template <class T>
+void list<T>::aplice(iterator position, list&, iterator i) {
+	iterator temp = i;
+	j++;
+	if(position == i || position == temp) return;
+	transfer(position, i, temp);
 }
 } //namespace mystl
